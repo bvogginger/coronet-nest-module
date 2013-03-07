@@ -50,7 +50,7 @@
  * The dynamicloader can then load modulename and search for symbol "mod" in it.
  */
 
-mynest::CoronetModule mymodule_LTX_mod;
+mynest::CoronetModule coronetmodule_LTX_mod;
 
 // -- DynModule functions ------------------------------------------------------
 

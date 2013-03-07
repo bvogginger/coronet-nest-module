@@ -81,6 +81,7 @@ public:
 
   // Classes implementing your functions -----------------------------
 
+};
 } // namespace mynest
 
 #endif

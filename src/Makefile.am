@@ -26,8 +26,7 @@ lib_LTLIBRARIES=      coronetmodule.la libcoronetmodule.la
 
 coronetmodule_la_CXXFLAGS= @AM_CXXFLAGS@
 coronetmodule_la_SOURCES=  coronetmodule.cpp      coronetmodule.h      \
-                      pif_psc_alpha.cpp pif_psc_alpha.h \
-                      drop_odd_spike_connection.h
+                      coronet_neuron.cpp coronet_neuron.h
 coronetmodule_la_LDFLAGS=  -module
 
 libcoronetmodule_la_CXXFLAGS= $(coronetmodule_la_CXXFLAGS) -DLINKED_MODULE

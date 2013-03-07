@@ -1,5 +1,5 @@
 /*
- *  mymodule.sli
+ *  coronetmodule.sli
  *
  *  This file is part of NEST.
  *
@@ -20,16 +20,11 @@
  *
  */
 /*
- * Initialization file for MyModule.
- * Run automatically when MyModule is loaded.
+ * Initialization file for CoronetModule.
+ * Run automatically when CoronetModule is loaded.
  */
 
-M_DEBUG (mymodule.sli) (Initializing SLI support for MyModule.) message
+M_DEBUG (coronetmodule.sli) (Initializing SLI support for CoronetModule.) message
 
-/mymodule /SLI ($Revision: 9952 $) provide-component
-/mymodule /C++ (7165) require-component
-
-/StepPatternConnect [ /arraytype /integertype /arraytype /integertype /literaltype ]
-{
-  StepPatternConnect_Vi_i_Vi_i_l
-} def
+/coronetmodule /SLI ($Revision: 9952 $) provide-component
+/coronetmodule /C++ (7165) require-component
