@@ -1,0 +1,8 @@
+# Steps to install Nest
+cd src
+./boostrap.sh
+cd ..
+cd build
+../src/configure --with-gsl
+make
+make install
