@@ -280,12 +280,6 @@ namespace mynest
     static nest::RecordablesMap<coronet_neuron> recordablesMap_;
   };
 
-  
-	/** connects a SpikeEvent to this node via a given receptor_type.
-	 *  Allowed receptor_types are defined in coronot_neuron::SynapseTypes,
-	 *  with the INF_SPIKE_RECEPTOR SUP_SPIKE_RECEPTOR being excluded.
-	 *  Returns than a different port, mapped to indices 0-X
-	 * */
   inline
   nest::port coronet_neuron::check_connection(nest::Connection& c, nest::port receptor_type)
   {
@@ -295,6 +289,12 @@ namespace mynest
     return c.get_target()->connect_sender(e, receptor_type);
   }
 
+  
+	/** connects a SpikeEvent to this node via a given receptor_type.
+	 *  Allowed receptor_types are defined in coronot_neuron::SynapseTypes,
+	 *  with the INF_SPIKE_RECEPTOR SUP_SPIKE_RECEPTOR being excluded.
+	 *  Returns than a different port, mapped to indices 0-X
+	 * */
   inline
   nest::port coronet_neuron::connect_sender(nest::SpikeEvent&, nest::port receptor_type)
   {
