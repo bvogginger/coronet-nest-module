@@ -77,13 +77,13 @@ mynest::CoronetModule::~CoronetModule()
    {
      /* 1. Tell interpreter that we provide the C++ part of CoronetModule with the
            current revision number.
-        2. Instruct the interpreter to check that mymodule-init.sli exists,
+        2. Instruct the interpreter to check that coronetmodule-init.sli exists,
            provides at least version 1.0 of the SLI interface to CoronetModule, and
            to load it.
       */
      return std::string(
-       "/mymodule /C++ ($Revision: 10071 $) provide-component "
-       "/mymodule /SLI (7165) require-component"
+       "/coronetmodule /C++ ($Revision: 10071 $) provide-component "
+       "/coronetmodule /SLI (7165) require-component"
        );
    }
 
