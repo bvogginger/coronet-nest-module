@@ -199,6 +199,7 @@ void mynest::coronet_neuron::State_::set(const DictionaryDatum& d, const Paramet
 
 mynest::coronet_neuron::Buffers_::Buffers_(coronet_neuron& n)
   : logger_(n),
+    spike_inputs_(std::vector<RingBuffer>(SUP_SPIKE_RECEPTOR-1)),
     s_(0),
     c_(0),
     e_(0)
@@ -209,6 +210,7 @@ mynest::coronet_neuron::Buffers_::Buffers_(coronet_neuron& n)
 
 mynest::coronet_neuron::Buffers_::Buffers_(const Buffers_&, coronet_neuron& n)
   : logger_(n),
+    spike_inputs_(std::vector<RingBuffer>(SUP_SPIKE_RECEPTOR-1)),
     s_(0),
     c_(0),
     e_(0)
@@ -258,8 +260,14 @@ void mynest::coronet_neuron::init_state_(const Node& proto)
 
 void mynest::coronet_neuron::init_buffers_()
 {
-  B_.spike_exc_.clear();          // includes resize
-  B_.spike_inh_.clear();          // includes resize
+
+    // Reset spike buffers.
+    for(std::vector<RingBuffer>::iterator it = B_.spike_inputs_.begin();
+	it != B_.spike_inputs_.end(); ++it)
+      {
+	it->clear(); // include resize
+      }
+
   B_.currents_.clear();           // includes resize
   Archiving_Node::clear_history();
 
@@ -341,8 +349,8 @@ void mynest::coronet_neuron::update(Time const & origin, const long_t from, cons
         throw GSLSolverFailure(get_name(), status);
     }
 
-    S_.y_[State_::G_EXC] += B_.spike_exc_.get_value(lag);
-    S_.y_[State_::G_INH] += B_.spike_inh_.get_value(lag);
+    S_.y_[State_::G_EXC] += B_.spike_inputs_[Buffers_::EX].get_value(lag);
+    S_.y_[State_::G_INH] += B_.spike_inputs_[Buffers_::IN].get_value(lag);
 
     // absolute refractory period
     if ( S_.r_ )
@@ -374,14 +382,12 @@ void mynest::coronet_neuron::update(Time const & origin, const long_t from, cons
 
 void mynest::coronet_neuron::handle(SpikeEvent & e)
 {
-  assert(e.get_delay() > 0);
+    assert(e.get_delay() > 0);
+    assert(e.get_rport() < static_cast<int_t>(B_.spike_inputs_.size()));
 
-  if(e.get_weight() > 0.0)
-    B_.spike_exc_.add_value(e.get_rel_delivery_steps(network()->get_slice_origin()),
-			    e.get_weight() * e.get_multiplicity() );
-  else
-    B_.spike_inh_.add_value(e.get_rel_delivery_steps(network()->get_slice_origin()),
-			    -e.get_weight() * e.get_multiplicity() );  // ensure conductance is positive
+    B_.spike_inputs_[e.get_rport()].
+      add_value(e.get_rel_delivery_steps(network()->get_slice_origin()),
+		e.get_weight() * e.get_multiplicity() );
 }
 
 void mynest::coronet_neuron::handle(CurrentEvent& e)

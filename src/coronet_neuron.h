@@ -132,6 +132,15 @@ namespace mynest
     void set_status(const DictionaryDatum &);
     
   private:
+
+    /**
+     * Synapse types to connect to
+     * @note Excluded upper and lower bounds are defined as INF_, SUP_.
+     *       Excluding port 0 avoids accidental connections.
+     */
+    enum SynapseTypes { INF_SPIKE_RECEPTOR = 0,
+			EX, IN,
+			SUP_SPIKE_RECEPTOR };
     void init_state_(const Node& proto);
     void init_buffers_();
     void calibrate();
@@ -212,9 +221,14 @@ namespace mynest
       //! Logger for all analog data
 	  nest::UniversalDataLogger<coronet_neuron> logger_;
 
+      //! Symbolic indices to the elements of the spike input vector
+	  //! must be in the same order like SynapseTypes
+      enum SpikeInputElems {
+			   EX = 0,
+			   IN };
+
       /** buffers and sums up incoming spikes/currents */
-	  nest::RingBuffer spike_exc_;
-	  nest::RingBuffer spike_inh_;
+      std::vector<nest::RingBuffer> spike_inputs_;
 	  nest::RingBuffer currents_;
 
       /** GSL ODE stuff */
@@ -267,6 +281,11 @@ namespace mynest
   };
 
   
+	/** connects a SpikeEvent to this node via a given receptor_type.
+	 *  Allowed receptor_types are defined in coronot_neuron::SynapseTypes,
+	 *  with the INF_SPIKE_RECEPTOR SUP_SPIKE_RECEPTOR being excluded.
+	 *  Returns than a different port, mapped to indices 0-X
+	 * */
   inline
   nest::port coronet_neuron::check_connection(nest::Connection& c, nest::port receptor_type)
   {
@@ -279,9 +298,16 @@ namespace mynest
   inline
   nest::port coronet_neuron::connect_sender(nest::SpikeEvent&, nest::port receptor_type)
   {
-    if (receptor_type != 0)
-      throw nest::UnknownReceptorType(receptor_type, get_name());
-    return 0;
+      assert(B_.spike_inputs_.size() == SUP_SPIKE_RECEPTOR-1);
+      
+      if ( !( INF_SPIKE_RECEPTOR < receptor_type 
+	      && receptor_type < SUP_SPIKE_RECEPTOR ) )
+      {
+	throw nest::UnknownReceptorType(receptor_type, get_name());
+	return 0;
+      }
+      else
+	return receptor_type - 1;
   }
  
   inline
@@ -308,6 +334,12 @@ namespace mynest
     S_.get(d);
     Archiving_Node::get_status(d);
 
+    DictionaryDatum receptor_type = new Dictionary();
+
+    (*receptor_type)["EX"] = EX;
+    (*receptor_type)["IN"] = IN;
+
+    (*d)["receptor_types"] = receptor_type;
     (*d)[nest::names::recordables] = recordablesMap_.get_list();
   }
 

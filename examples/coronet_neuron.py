@@ -12,8 +12,17 @@ nest.ResetKernel()
 Neuron = nest.Create('coronet_neuron')
 PoissonStim = nest.Create('poisson_generator', 2, params={'rate':20.})
 
-nest.Connect([PoissonStim[0]], Neuron, params={'weight':20.})
-nest.Connect([PoissonStim[1]], Neuron, params={'weight':-10.})
+# Get dictionary of receptor types for coronet neuron
+receptors = nest.GetDefaults('coronet_neuron')['receptor_types']
+print receptors
+
+# before (fails now!)
+#nest.Connect([PoissonStim[0]], Neuron, params={'weight':20.})
+#nest.Connect([PoissonStim[1]], Neuron, params={'weight':-10.})
+
+# now with receptor_type:
+nest.Connect([PoissonStim[0]], Neuron, params={'weight':20., 'receptor_type':receptors['EX']})
+nest.Connect([PoissonStim[1]], Neuron, params={'weight':10., 'receptor_type':receptors['IN']})
 
 vm = nest.Create('voltmeter')
 nest.Connect(vm,Neuron)
