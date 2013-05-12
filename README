@@ -3,6 +3,6 @@ cd src
 ./boostrap.sh
 cd ..
 cd build
-../src/configure --with-gsl
+../src/configure --with-gsl --with-nest=${NEST_INSTALL_DIR}/bin/nest-config
 make
 make install

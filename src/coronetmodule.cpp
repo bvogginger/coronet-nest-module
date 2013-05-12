@@ -37,6 +37,7 @@
 // include headers with your own stuff
 #include "coronetmodule.h"
 #include "coronet_neuron.h"
+#include "iaf_4_cond_exp.h"
 
 // -- Interface to dynamic module loader ---------------------------------------
 
@@ -98,6 +99,8 @@ mynest::CoronetModule::~CoronetModule()
     */
     nest::register_model<coronet_neuron>(nest::NestModule::get_network(),
                                         "coronet_neuron");
+    nest::register_model<iaf_4_cond_exp>(nest::NestModule::get_network(),
+                                        "iaf_4_cond_exp");
 
   }  // CoronetModule::init()
 

@@ -26,7 +26,8 @@ lib_LTLIBRARIES=      coronetmodule.la libcoronetmodule.la
 
 coronetmodule_la_CXXFLAGS= @AM_CXXFLAGS@
 coronetmodule_la_SOURCES=  coronetmodule.cpp      coronetmodule.h      \
-                      coronet_neuron.cpp coronet_neuron.h
+                      coronet_neuron.cpp coronet_neuron.h \
+                      iaf_4_cond_exp.cpp iaf_4_cond_exp.h
 coronetmodule_la_LDFLAGS=  -module
 
 libcoronetmodule_la_CXXFLAGS= $(coronetmodule_la_CXXFLAGS) -DLINKED_MODULE
