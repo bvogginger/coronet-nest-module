@@ -14,7 +14,6 @@ PoissonStim = nest.Create('poisson_generator', 2, params={'rate':20.})
 
 # Get dictionary of receptor types for coronet neuron
 receptors = nest.GetDefaults('iaf_4_cond_exp')['receptor_types']
-print receptors
 
 # before (fails now!)
 #nest.Connect([PoissonStim[0]], Neuron, params={'weight':20.})
